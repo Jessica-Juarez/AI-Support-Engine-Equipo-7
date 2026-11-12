@@ -1,0 +1,31 @@
+{
+  "name": "ai-support-engine-equipo-7",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "benchmark": "node src/benchmark.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jessica-Juarez/AI-Support-Engine-Equipo-7.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jessica-Juarez/AI-Support-Engine-Equipo-7/issues"
+  },
+  "homepage": "https://github.com/Jessica-Juarez/AI-Support-Engine-Equipo-7#readme",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "type": "module"
+}
