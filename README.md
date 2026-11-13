@@ -30,7 +30,7 @@ Invoke-RestMethod -Uri http://localhost:3000/api/analyze `
 
 ## Configuración del motor generativo
 
-Por defecto se conecta a Ollama en `http://localhost:11434/v1` y usa el modelo `llama3.1`. Descarga/inicia Ollama y configura un modelo disponible, o crea `.env` con los datos del proveedor:
+Por defecto se conecta a Ollama en `http://localhost:11434/v1` y usa el modelo `qwen2.5:3b`. Descárgalo con `ollama pull qwen2.5:3b` e inicia Ollama, o configura un modelo disponible distinto en `.env`:
 
 ```text
 AI_BASE_URL=https://api.openai.com/v1
@@ -62,4 +62,6 @@ npm test
 npm run benchmark
 ```
 
-El benchmark compara ambos motores con los mismos 10 casos de referencia (incluye ambigüedad e intentos de inyección de instrucciones), verifica el contrato y considera correcta una clasificación solo si coinciden categoría y prioridad. Muestra los resultados y genera `evidence/benchmark-results.md` con la tabla, porcentajes y una conclusión breve. El benchmark llama al proveedor configurado de verdad y falla explícitamente si no está disponible; no sustituye sus respuestas por resultados escritos manualmente. Define primero la referencia en [tests/cases.js](./tests/cases.js) si cambias la muestra.
+El benchmark compara ambos motores con los mismos 10 casos de referencia (incluye ambigüedad e intentos de inyección de instrucciones), verifica el contrato y considera correcta una clasificación solo si coinciden categoría y prioridad. Muestra los resultados y genera `evidence/benchmark-results.md` con la tabla, porcentajes y una conclusión breve. El benchmark llama al proveedor configurado de verdad, cuenta respuestas inválidas como incorrectas y falla si ninguna llamada generativa se procesa correctamente; no sustituye respuestas por resultados escritos manualmente. Define primero la referencia en [tests/cases.js](./tests/cases.js) si cambias la muestra.
+
+La evidencia de las respuestas reales de ambos modos en el endpoint está en [evidence/api-execution.md](./evidence/api-execution.md); la comparación de 10 casos está en [evidence/benchmark-results.md](./evidence/benchmark-results.md).
