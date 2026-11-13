@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { mkdir, writeFile } from "node:fs/promises";
 import { classifyGenerative } from "./generative.js";
 import { classifyTraditional } from "./traditional.js";
@@ -37,8 +36,8 @@ async function evaluate(mode, analyzer) {
         id: testCase.id,
         expectedCategory: testCase.category,
         expectedPriority: testCase.priority,
-        category: "INVALID",
-        priority: "INVALID",
+        category: "ERROR",
+        priority: "ERROR",
         formatValid: false,
         correct: false,
         error: error.message,
@@ -65,26 +64,17 @@ function renderReport(traditional, generative) {
   }
 
   const traditionalScore = percentage(traditional);
-  const validGenerative = generative.filter((result) => result.formatValid).length;
-  const generativeScore = percentage(generative);
-  const generativeCategoryMatches = generative.filter(
-    (result, index) =>
-      result.formatValid && result.category === cases[index].category,
-  ).length;
-  const generativePriorityOnlyErrors = generative.filter(
-    (result, index) =>
-      result.formatValid &&
-      result.category === cases[index].category &&
-      result.priority !== cases[index].priority,
-  ).length;
+  const completedGenerative = generative.filter((result) => !result.error);
+  const generativeScore =
+    completedGenerative.length > 0 ? percentage(completedGenerative) : null;
   let conclusion;
-  if (validGenerative === 0) {
-    conclusion = `No se obtuvo ninguna respuesta generativa válida (${generative.length} casos intentados). No es posible evaluar el motor generativo; verifica el proveedor y vuelve a ejecutar el benchmark.`;
+  if (completedGenerative.length !== cases.length) {
+    conclusion = `La comparación generativa está incompleta (${completedGenerative.length}/${cases.length} casos procesados); no se declara un ganador. Configura o repara el proveedor y vuelve a ejecutar el benchmark.`;
   } else if (traditionalScore === generativeScore) {
-    conclusion = `Ambos motores obtuvieron ${traditionalScore}% de clasificaciones exactas en estos casos. El generativo acertó ${generativeCategoryMatches}/${cases.length} categorías y tuvo ${generativePriorityOnlyErrors} errores de prioridad. ${cases.length - validGenerative} respuestas tuvieron formato inválido. La muestra no permite generalizar el desempeño.`;
+    conclusion = `Ambos motores obtuvieron ${traditionalScore}% de clasificaciones exactas en estos casos. La muestra es pequeña y contiene casos ambiguos y de inyección; no permite generalizar el desempeño.`;
   } else {
     const winner = traditionalScore > generativeScore ? "tradicional" : "generativo";
-    conclusion = `El motor ${winner} obtuvo mayor exactitud (${Math.max(traditionalScore, generativeScore)}% frente a ${Math.min(traditionalScore, generativeScore)}%). El generativo acertó ${generativeCategoryMatches}/${cases.length} categorías, pero tuvo ${generativePriorityOnlyErrors} errores de prioridad; ${cases.length - validGenerative} respuestas tuvieron formato inválido. Las reglas coincidieron mejor con esta referencia. La muestra es pequeña y no permite generalizar.`;
+    conclusion = `El motor ${winner} obtuvo mayor exactitud (${Math.max(traditionalScore, generativeScore)}% frente a ${Math.min(traditionalScore, generativeScore)}%) en esta muestra. El resultado depende de los casos de referencia y, para el generativo, del modelo configurado.`;
   }
 
   return [
@@ -95,7 +85,7 @@ function renderReport(traditional, generative) {
     ...table,
     "",
     `- Exactitud tradicional: ${traditionalScore}%`,
-    `- Exactitud generativa: ${generativeScore}% (${validGenerative}/${cases.length} respuestas con formato válido)`,
+    `- Exactitud generativa: ${generativeScore === null ? `No disponible (${completedGenerative.length}/${cases.length} casos procesados)` : `${generativeScore}% (${completedGenerative.length}/${cases.length} casos procesados)`}`,
     "",
     `Conclusión: ${conclusion}`,
     "",
@@ -108,7 +98,7 @@ const report = renderReport(traditionalResults, generativeResults);
 await mkdir(new URL("../evidence/", import.meta.url), { recursive: true });
 await writeFile(new URL("../evidence/benchmark-results.md", import.meta.url), report, "utf8");
 console.log(report);
-if (generativeResults.every((result) => result.error)) {
-  console.error("Ninguna llamada generativa fue procesada correctamente; revisa la configuración y disponibilidad del proveedor.");
+if (generativeResults.some((result) => result.error)) {
+  console.error("La comparación quedó incompleta: revisa la configuración y disponibilidad del proveedor generativo.");
   process.exitCode = 1;
 }
