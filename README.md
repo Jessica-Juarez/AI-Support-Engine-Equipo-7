@@ -28,6 +28,31 @@ Invoke-RestMethod -Uri http://localhost:3000/api/analyze `
   -Body '{"message":"No puedo iniciar sesión","mode":"traditional"}'
 ```
 
+## Entrenamiento de machine learning
+
+El script independiente necesita Python, pandas y scikit-learn. Instala las dependencias y ejecuta:
+
+```powershell
+python -m pip install -r requirements.txt
+python src/train_model.py ruta\a\tickets.csv
+```
+
+Si omites la ruta, busca `tickets.csv` en el directorio actual. El archivo debe tener las columnas `message` y `category`, con mensajes de soporte y sus categorías correctas, por ejemplo:
+
+```csv
+message,category
+No puedo iniciar sesión,ACCESS
+La aplicación muestra un error,BUG
+```
+
+Estos ejemplos solo muestran el formato: no bastan para entrenar. Usa datos etiquetados representativos de cada categoría, con al menos dos tickets por categoría y suficientes ejemplos para que las particiones de entrenamiento y prueba incluyan todas las categorías. El script divide los datos de forma estratificada, imprime un informe de clasificación y predice la categoría de un mensaje de ejemplo. No guarda el modelo ni modifica los motores de la API.
+
+Para ejecutar las pruebas del script:
+
+```powershell
+python -m unittest discover -s tests -p "test_train_model.py"
+```
+
 ## Configuración del motor generativo
 
 Por defecto se conecta a Ollama en `http://localhost:11434/v1` y usa el modelo `qwen2.5:3b`. Descárgalo con `ollama pull qwen2.5:3b` e inicia Ollama, o configura un modelo disponible distinto en `.env`:
