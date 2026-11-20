@@ -88,3 +88,130 @@ npm run benchmark
 ```
 
 El benchmark compara ambos motores con los mismos 10 casos de referencia (incluye ambigüedad e intentos de inyección de instrucciones), verifica el contrato y considera correcta una clasificación solo si coinciden categoría y prioridad. Muestra los resultados y genera `evidence/benchmark-results.md` con la tabla, porcentajes y una conclusión breve. El benchmark llama al proveedor configurado de verdad y falla explícitamente si no está disponible; no sustituye sus respuestas por resultados escritos manualmente. Define primero la referencia en [tests/cases.js](./tests/cases.js) si cambias la muestra.
+
+
+
+## Clasificador de Machine Learning con Python
+
+El proyecto incluye un clasificador tradicional basado en Machine Learning, desarrollado con Python y scikit-learn.
+
+Este modelo utiliza TF-IDF y Regresión Logística para clasificar solicitudes de soporte en cuatro categorías:
+
+- ACCESS: problemas de acceso a cuentas.
+- BUG: errores o fallas del sistema.
+- FEATURE: solicitudes de nuevas funcionalidades.
+- SECURITY: incidentes relacionados con seguridad.
+
+### Instalación de dependencias
+
+Instalar las dependencias de Node.js:
+
+```bash
+npm install
+```
+
+Instalar las dependencias de Python:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### Entrenamiento del modelo
+
+Desde la raíz del proyecto, ejecutar:
+
+```bash
+python src/train_model.py
+```
+
+El modelo entrenado se guarda automáticamente en:
+
+```text
+models/ticket_classifier.joblib
+```
+
+Si se modifica el archivo tickets.csv, se debe volver a ejecutar el entrenamiento.
+
+### Iniciar el servicio Python
+
+En una terminal:
+
+```bash
+python src/model_service.py
+```
+
+El servicio estará disponible en:
+
+```text
+http://127.0.0.1:8000
+```
+
+Endpoint de clasificación:
+
+```text
+POST /predict
+```
+
+Ejemplo de solicitud:
+
+```json
+{
+  "message": "No puedo iniciar sesión en mi cuenta"
+}
+```
+
+### Iniciar el servidor Node.js
+
+En otra terminal:
+
+```bash
+npm start
+```
+
+La API estará disponible en:
+
+```text
+http://localhost:3000
+```
+
+### Utilizar el clasificador Python desde Node.js
+
+Endpoint:
+
+```text
+POST /api/analyze
+```
+
+Ejemplo de solicitud:
+
+```json
+{
+  "message": "No puedo iniciar sesión en mi cuenta",
+  "mode": "python"
+}
+```
+
+Respuesta esperada:
+
+```json
+{
+  "category": "ACCESS",
+  "mode": "python"
+}
+```
+
+Para utilizar el clasificador Python, ambos servicios deben estar ejecutándose al mismo tiempo.
+
+### Ejecutar las pruebas
+
+Pruebas de Node.js:
+
+```bash
+npm test
+```
+
+Pruebas de Python:
+
+```bash
+python -m unittest discover -s tests -p "test_*.py"
+```
