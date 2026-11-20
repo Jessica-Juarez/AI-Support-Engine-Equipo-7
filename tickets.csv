@@ -1,0 +1,197 @@
+message,category
+No puedo iniciar sesión,ACCESS
+Olvidé mi contraseña,ACCESS
+No me llega el correo para restablecer mi contraseña,ACCESS
+Mi cuenta aparece bloqueada,ACCESS
+Dice que mi usuario o contraseña son incorrectos,ACCESS
+No recibo el código de verificación por SMS,ACCESS
+El enlace de recuperación de contraseña ya expiró,ACCESS
+No puedo entrar con mi cuenta de Google,ACCESS
+Quiero cambiar mi contraseña pero no me deja,ACCESS
+Me pide autenticación en dos pasos y perdí mi teléfono,ACCESS
+Mi usuario no existe según el sistema,ACCESS
+Después de varios intentos me bloquearon el acceso,ACCESS
+No logro acceder a mi perfil,ACCESS
+La página de inicio de sesión se queda cargando,ACCESS
+Necesito recuperar el acceso a mi cuenta,ACCESS
+Mi cuenta fue suspendida y no sé por qué,ACCESS
+No puedo ingresar desde mi celular,ACCESS
+El sistema no reconoce mi correo electrónico,ACCESS
+No tengo permisos para entrar al panel de administración,ACCESS
+Mi sesión se cierra sola cada pocos minutos,ACCESS
+No puedo cambiar mi correo de acceso,ACCESS
+Se me perdió el código de recuperación,ACCESS
+El código de verificación nunca llega a mi correo,ACCESS
+Necesito desbloquear mi usuario,ACCESS
+No me deja registrarme con mi correo,ACCESS
+Quiero activar mi cuenta pero el enlace no funciona,ACCESS
+Cómo restablezco mi contraseña si ya no uso ese correo,ACCESS
+El inicio de sesión con Facebook falla,ACCESS
+Me aparece acceso denegado al entrar,ACCESS
+No puedo ver mis proyectos porque no me deja entrar,ACCESS
+Mi contraseña nueva no es aceptada,ACCESS
+Perdí el acceso a mi aplicación de autenticación,ACCESS
+Necesito que me den permisos de editor,ACCESS
+No puedo iniciar sesión en la versión web,ACCESS
+Mi cuenta de empresa no me deja acceder,ACCESS
+La contraseña temporal no funciona,ACCESS
+Olvidé mi nombre de usuario,ACCESS
+Me sale un mensaje de cuenta inactiva,ACCESS
+No me deja iniciar sesión con huella digital,ACCESS
+Solicito restablecer mi acceso por favor,ACCESS
+No puedo entrar y ya probé varias veces,ACCESS
+El token de acceso expiró y no puedo renovarlo,ACCESS
+Mi invitación al equipo no me permite entrar,ACCESS
+No puedo verificar mi identidad para entrar,ACCESS
+Necesito ayuda para entrar a mi cuenta,ACCESS
+La contraseña no se actualiza después de cambiarla,ACCESS
+I can't log in to my account,ACCESS
+Me pide un código que no recibo,ACCESS
+Quiero recuperar mi cuenta eliminada,ACCESS
+La aplicación no abre,BUG
+Aparece un error al guardar,BUG
+La app se cierra inesperadamente,BUG
+La página se queda en blanco al cargar,BUG
+El botón de enviar no responde,BUG
+Me sale error 500 al abrir el reporte,BUG
+La aplicación se congela al subir una imagen,BUG
+Los datos no se guardan después de editar,BUG
+La búsqueda no muestra resultados,BUG
+El sistema va muy lento,BUG
+Se duplican los registros al guardar,BUG
+La pantalla se queda cargando sin fin,BUG
+Las notificaciones no llegan,BUG
+El formulario borra lo que escribo,BUG
+Aparece un mensaje de error desconocido,BUG
+La app falla cuando intento adjuntar un archivo,BUG
+El calendario muestra fechas incorrectas,BUG
+Los totales de la tabla están mal calculados,BUG
+El menú no se despliega,BUG
+Error de conexión aunque tengo internet,BUG
+La aplicación se cierra al abrir la cámara,BUG
+No se puede descargar el archivo adjunto,BUG
+El gráfico no se muestra correctamente,BUG
+La pantalla se ve cortada en mi celular,BUG
+Salió una ventana de error al intentar imprimir,BUG
+Al hacer clic en guardar no pasa nada,BUG
+El filtro no funciona como debería,BUG
+La aplicación consume demasiada batería,BUG
+Los caracteres con acentos se ven raros,BUG
+La página muestra error 404 en una sección,BUG
+El sistema se cae cuando hay muchos usuarios,BUG
+No puedo subir archivos de más de 5 MB,BUG
+La app muestra pantalla negra al iniciar,BUG
+El botón de cancelar no hace nada,BUG
+La hora que aparece en la app es incorrecta,BUG
+Después de la actualización ya no funciona,BUG
+Se pierde el progreso cuando cambio de pantalla,BUG
+Error al cargar la lista de pedidos,BUG
+La app crashea al cambiar de idioma,BUG
+El archivo exportado sale corrupto,BUG
+Los comentarios no se publican,BUG
+El video no se reproduce,BUG
+Aparece un error de timeout,BUG
+Los cambios no se reflejan hasta recargar,BUG
+La aplicación se traba al abrir el perfil,BUG
+Mensaje de excepción al guardar el formulario,BUG
+Los botones se ven encimados,BUG
+Tengo un error al sincronizar mis datos,BUG
+The app crashes when I open it,BUG
+Quiero que agreguen modo oscuro,FEATURE
+Necesito exportar mis datos,FEATURE
+Sería útil poder exportar a Excel,FEATURE
+Me gustaría tener notificaciones por correo,FEATURE
+Pueden agregar soporte para otros idiomas,FEATURE
+Propongo una opción para programar publicaciones,FEATURE
+Falta una opción para filtrar por fecha,FEATURE
+Quisiera poder compartir mis reportes con otros usuarios,FEATURE
+Sería genial tener una aplicación para iPad,FEATURE
+Ojalá pudieran integrar con Google Calendar,FEATURE
+Solicito agregar atajos de teclado,FEATURE
+Me gustaría personalizar el color de mi panel,FEATURE
+Necesito una función para importar contactos,FEATURE
+Podrían añadir un botón para duplicar elementos,FEATURE
+Quiero poder descargar mis facturas en PDF,FEATURE
+Sugiero agregar una vista de calendario,FEATURE
+Necesitamos reportes semanales automáticos,FEATURE
+Sería bueno poder ordenar las tareas arrastrando,FEATURE
+Pido que incluyan integración con Slack,FEATURE
+Quisiera una opción para recordatorios,FEATURE
+Me gustaría ver estadísticas de mi uso,FEATURE
+Propongo agregar etiquetas para organizar tickets,FEATURE
+Agreguen la opción de cambiar el tamaño de letra,FEATURE
+Necesito poder asignar tareas a varias personas,FEATURE
+Sería útil tener una versión sin conexión,FEATURE
+Quiero poder fijar mis elementos favoritos,FEATURE
+Solicito un historial de cambios,FEATURE
+Podrían habilitar comentarios en los documentos,FEATURE
+Falta la opción de ocultar columnas,FEATURE
+Me gustaría tener plantillas prediseñadas,FEATURE
+Agreguen búsqueda avanzada por favor,FEATURE
+Sugiero permitir varios perfiles por cuenta,FEATURE
+Quiero una opción para respaldar mis datos,FEATURE
+Necesito integración con WhatsApp,FEATURE
+Sería ideal tener widgets en la pantalla de inicio,FEATURE
+Pido una función para fusionar registros duplicados,FEATURE
+Me gustaría poder cambiar el idioma desde ajustes,FEATURE
+Podrían agregar pagos con tarjeta,FEATURE
+Quiero una API para conectar mis sistemas,FEATURE
+Solicito un modo de lectura simplificado,FEATURE
+Propongo agregar un tutorial para nuevos usuarios,FEATURE
+Sería útil poder arrastrar y soltar archivos,FEATURE
+Necesito poder imprimir reportes con mi logotipo,FEATURE
+Me gustaría recibir un resumen diario,FEATURE
+Falta una opción para marcar tareas como urgentes,FEATURE
+Agreguen la posibilidad de crear carpetas,FEATURE
+Quisiera un tablero para ver todo en un solo lugar,FEATURE
+Sugiero añadir una opción para deshacer cambios,FEATURE
+I would like a dark mode option,FEATURE
+Alguien entró a mi cuenta sin autorización,SECURITY
+Detecté una posible filtración de datos,SECURITY
+Recibí un correo sospechoso pidiendo mi contraseña,SECURITY
+Veo inicios de sesión desde un país donde nunca he estado,SECURITY
+Creo que me hackearon la cuenta,SECURITY
+Alguien cambió mi contraseña sin mi permiso,SECURITY
+Encontré una vulnerabilidad en el formulario de contacto,SECURITY
+Se están mostrando datos de otros usuarios en mi pantalla,SECURITY
+Detecté actividad extraña en mi cuenta,SECURITY
+Me llegó un mensaje de phishing que dice ser de ustedes,SECURITY
+Sospecho que mi cuenta fue comprometida,SECURITY
+Un enlace malicioso apareció en los comentarios,SECURITY
+Hay accesos no autorizados en el registro de actividad,SECURITY
+Puedo ver información privada de otra empresa,SECURITY
+Un empleado compartió credenciales por error,SECURITY
+Descubrí que la API expone datos sin autenticación,SECURITY
+Se enviaron correos desde mi cuenta sin que yo los escribiera,SECURITY
+Sospecho de un ataque de fuerza bruta contra mi usuario,SECURITY
+Mi dispositivo fue robado y tenía la sesión abierta,SECURITY
+Quiero reportar un intento de suplantación de identidad,SECURITY
+Alguien está usando mi cuenta desde otro dispositivo,SECURITY
+Hay un posible malware en un archivo adjunto,SECURITY
+Creo que hay una brecha de seguridad en el sistema,SECURITY
+Detectamos tráfico inusual hacia el servidor,SECURITY
+Un tercero tuvo acceso a documentos confidenciales,SECURITY
+Recibí alertas de inicio de sesión que no reconozco,SECURITY
+Me cambiaron el correo de recuperación sin avisarme,SECURITY
+Se expuso un archivo con datos de clientes,SECURITY
+Encontré un fallo que permite saltarse la autenticación,SECURITY
+Alguien intenta inyectar código en el buscador,SECURITY
+Reporto un posible robo de información,SECURITY
+Se filtraron datos de usuarios en un foro público,SECURITY
+Mi cuenta hizo compras que no autoricé,SECURITY
+Necesito revocar el acceso de una persona que ya no trabaja aquí,SECURITY
+Un sitio falso imita su página de inicio de sesión,SECURITY
+Sospecho que alguien espía mi cuenta,SECURITY
+Se descargaron archivos sensibles sin autorización,SECURITY
+Creo que mi token de acceso fue robado,SECURITY
+Hay un usuario desconocido con permisos de administrador,SECURITY
+Me llegó una notificación de acceso desde un dispositivo extraño,SECURITY
+Detecté un intento de ransomware en la red,SECURITY
+Mis datos aparecen en una filtración pública,SECURITY
+Alguien se hizo pasar por soporte técnico para pedir mi clave,SECURITY
+Mi cuenta está enviando spam a mis contactos,SECURITY
+Veo cambios en mi perfil que yo no hice,SECURITY
+Se accedió a mi cuenta de administrador sin permiso,SECURITY
+Creo que alguien interceptó mis datos,SECURITY
+Posible fuga de información en el sistema de reportes,SECURITY
+Someone accessed my account without my permission,SECURITY
