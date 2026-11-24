@@ -77,3 +77,161 @@ test("generative engine rejects model output outside the response contract", asy
     },
   );
 });
+
+test("generative engine escalates unauthorized account activity despite an incorrect model result", async () => {
+  await withMockProvider(
+    async () =>
+      providerResponse({
+        category: "ACCESS",
+        priority: "LOW",
+        response: "Revisaremos la cuenta.",
+        requiresHumanReview: false,
+      }),
+    async () => {
+      const result = await classifyGenerative("Alguien entró a mi cuenta sin autorización");
+      assert.equal(result.category, "SECURITY");
+      assert.equal(result.priority, "HIGH");
+      assert.equal(result.requiresHumanReview, true);
+    },
+  );
+});
+
+test("generative engine rejects a response that asks the user to disclose a password", async () => {
+  await withMockProvider(
+    async () =>
+      providerResponse({
+        category: "ACCESS",
+        priority: "MEDIUM",
+        response: "Por favor, proporcione su correo electrónico y su nueva contraseña.",
+        requiresHumanReview: false,
+      }),
+    async () => {
+      await assert.rejects(
+        classifyGenerative("No puedo iniciar sesión"),
+        /solicitó datos sensibles/,
+      );
+    },
+  );
+});
+
+test("generative engine accepts advice not to disclose a password", async () => {
+  await withMockProvider(
+    async () =>
+      providerResponse({
+        category: "SECURITY",
+        priority: "HIGH",
+        response: "No comparta su contraseña con nadie.",
+        requiresHumanReview: true,
+      }),
+    async () => {
+      const result = await classifyGenerative("Detecté phishing");
+      assert.equal(result.response, "No comparta su contraseña con nadie.");
+    },
+  );
+});
+
+test("generative engine rejects a claim that an investigation is underway", async () => {
+  await withMockProvider(
+    async () =>
+      providerResponse({
+        category: "BUG",
+        priority: "HIGH",
+        response: "Estoy revisando el problema y ya estoy en contacto con el equipo.",
+        requiresHumanReview: false,
+      }),
+    async () => {
+      await assert.rejects(
+        classifyGenerative("La aplicación se cierra al guardar"),
+        /acciones que no se han realizado/,
+      );
+    },
+  );
+});
+
+test("generative engine retries a rejected response using the provider's new answer", async () => {
+  let calls = 0;
+  await withMockProvider(
+    async (url, options) => {
+      calls += 1;
+      const request = JSON.parse(options.body);
+      if (calls === 1) {
+        return providerResponse({
+          category: "ACCESS",
+          priority: "MEDIUM",
+          response: "Envíe su contraseña.",
+          requiresHumanReview: false,
+        });
+      }
+      assert.match(request.messages.at(-1).content, /respuesta anterior fue rechazada/);
+      assert.equal(request.messages.at(-2).role, "assistant");
+      assert.match(request.messages.at(-2).content, /Envíe su contraseña/);
+      return providerResponse({
+        category: "ACCESS",
+        priority: "MEDIUM",
+        response: "Utilice la recuperación oficial de su cuenta.",
+        requiresHumanReview: false,
+      });
+    },
+    async () => {
+      const result = await classifyGenerative("No puedo iniciar sesión");
+      assert.equal(result.response, "Utilice la recuperación oficial de su cuenta.");
+      assert.equal(calls, 2);
+    },
+  );
+});
+
+test("generative engine stops after two rejected answers", async () => {
+  let calls = 0;
+  await withMockProvider(
+    async () => {
+      calls += 1;
+      return providerResponse({
+        category: "ACCESS",
+        priority: "MEDIUM",
+        response: "Envíe su contraseña.",
+        requiresHumanReview: false,
+      });
+    },
+    async () => {
+      await assert.rejects(
+        classifyGenerative("No puedo iniciar sesión"),
+        (error) => error.statusCode === 502 && /solicitó datos sensibles/.test(error.message),
+      );
+      assert.equal(calls, 2);
+    },
+  );
+});
+
+test("generative engine rejects unsupported claims about implementing a fix", async () => {
+  await withMockProvider(
+    async () => providerResponse({
+      category: "BUG",
+      priority: "CRITICAL",
+      response: "Estamos implementando las medidas necesarias para resolverlo.",
+      requiresHumanReview: false,
+    }),
+    async () => {
+      await assert.rejects(
+        classifyGenerative("El servicio está caído"),
+        /acciones que no se han realizado/,
+      );
+    },
+  );
+});
+
+test("generative engine rejects unverified contact details", async () => {
+  await withMockProvider(
+    async () => providerResponse({
+      category: "BUG",
+      priority: "HIGH",
+      response: "Envíe los detalles a soporte@ejemplo.com.",
+      requiresHumanReview: false,
+    }),
+    async () => {
+      await assert.rejects(
+        classifyGenerative("La aplicación se cierra"),
+        /datos de contacto no verificados/,
+      );
+    },
+  );
+});

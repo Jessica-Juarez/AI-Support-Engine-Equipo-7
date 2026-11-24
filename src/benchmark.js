@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { mkdir, writeFile } from "node:fs/promises";
 import { classifyGenerative } from "./generative.js";
 import { classifyTraditional } from "./traditional.js";
@@ -25,6 +26,9 @@ async function evaluate(mode, analyzer) {
         expectedPriority: testCase.priority,
         category: result.category,
         priority: result.priority,
+        response: result.response,
+        requiresHumanReview: result.requiresHumanReview,
+        mode: result.mode,
         formatValid: isValidResult(result, mode),
         correct:
           isValidResult(result, mode) &&
@@ -65,30 +69,52 @@ function renderReport(traditional, generative) {
 
   const traditionalScore = percentage(traditional);
   const completedGenerative = generative.filter((result) => !result.error);
-  const generativeScore =
-    completedGenerative.length > 0 ? percentage(completedGenerative) : null;
+  const generativeScore = percentage(generative);
   let conclusion;
-  if (completedGenerative.length !== cases.length) {
-    conclusion = `La comparación generativa está incompleta (${completedGenerative.length}/${cases.length} casos procesados); no se declara un ganador. Configura o repara el proveedor y vuelve a ejecutar el benchmark.`;
+  if (completedGenerative.length === 0) {
+    conclusion = "El motor generativo no produjo ninguna respuesta válida; no se declara un ganador. Revisa el proveedor y vuelve a ejecutar el benchmark.";
   } else if (traditionalScore === generativeScore) {
     conclusion = `Ambos motores obtuvieron ${traditionalScore}% de clasificaciones exactas en estos casos. La muestra es pequeña y contiene casos ambiguos y de inyección; no permite generalizar el desempeño.`;
   } else {
     const winner = traditionalScore > generativeScore ? "tradicional" : "generativo";
-    conclusion = `El motor ${winner} obtuvo mayor exactitud (${Math.max(traditionalScore, generativeScore)}% frente a ${Math.min(traditionalScore, generativeScore)}%) en esta muestra. El resultado depende de los casos de referencia y, para el generativo, del modelo configurado.`;
+    conclusion = `El motor ${winner} obtuvo mayor exactitud (${Math.max(traditionalScore, generativeScore)}% frente a ${Math.min(traditionalScore, generativeScore)}%) porque coincidió con la categoría y prioridad de referencia en más casos. La muestra es pequeña y el resultado generativo depende del modelo configurado.`;
   }
+  if (completedGenerative.length < cases.length) {
+    conclusion += ` Las respuestas generativas fallidas o rechazadas (${cases.length - completedGenerative.length}) cuentan como incorrectas.`;
+  }
+
+  const example = (result) => JSON.stringify({
+    category: result.category,
+    priority: result.priority,
+    response: result.response,
+    requiresHumanReview: result.requiresHumanReview,
+    mode: result.mode,
+  }, null, 2);
+  const traditionalExample = traditional.find((result) => result.formatValid);
+  const generativeExample = generative.find((result) => result.formatValid);
 
   return [
     "# Evidencia comparativa",
     "",
     `Casos evaluados: ${cases.length}. Se considera correcto cuando categoría y prioridad coinciden con la referencia y el contrato es válido.`,
+    `Modelo generativo configurado: ${process.env.AI_MODEL || "llama3.1"}.`,
+    `Mensajes y referencias: [tests/cases.js](../tests/cases.js).`,
     "",
     ...table,
     "",
     `- Exactitud tradicional: ${traditionalScore}%`,
-    `- Exactitud generativa: ${generativeScore === null ? `No disponible (${completedGenerative.length}/${cases.length} casos procesados)` : `${generativeScore}% (${completedGenerative.length}/${cases.length} casos procesados)`}`,
+    `- Exactitud generativa: ${generativeScore}% (${completedGenerative.length}/${cases.length} respuestas procesadas; los errores cuentan como incorrectos)`,
     "",
     `Conclusión: ${conclusion}`,
     "",
+    "## Ejemplos de respuestas",
+    "",
+    ...(traditionalExample
+      ? [`Tradicional (${traditionalExample.id}):`, "", "```json", example(traditionalExample), "```", ""]
+      : []),
+    ...(generativeExample
+      ? [`Generativo (${generativeExample.id}):`, "", "```json", example(generativeExample), "```", ""]
+      : []),
   ].join("\n");
 }
 

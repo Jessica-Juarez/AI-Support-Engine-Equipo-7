@@ -1,3 +1,5 @@
+import { SECURITY_PATTERN } from "./security.js";
+
 const CATEGORY_RESPONSES = {
   ACCESS:
     "Lamentamos el inconveniente. Verifique sus credenciales y utilice la recuperación de contraseña si es necesario.",
@@ -9,8 +11,6 @@ const CATEGORY_RESPONSES = {
     "Gracias por alertarnos. El equipo de seguridad revisará el incidente; no comparta credenciales ni detalles sensibles por este canal.",
 };
 
-const SECURITY_PATTERN =
-  /\b(vulnerabil\w*|brecha|breach|filtraci[oó]n|exfiltraci[oó]n|exfiltration|data leak|ransomware|malware|phishing|exploit|inyecci[oó]n|injection|acceso no autorizado|unauthorized access|credenciales expuestas|exposed credentials|token robado|stolen token|cuenta comprometida|compromised account|security incident|security issue)\b/i;
 const CRITICAL_PATTERN =
   /\b(cr[ií]tic\w*|brecha|breach|filtraci[oó]n|exfiltraci[oó]n|exfiltration|ransomware|acceso no autorizado|unauthorized access|token robado|stolen token|cuenta comprometida|compromised account|ca[ií]do para todos|ca[ií]da total|outage|all users|todos los usuarios|p[eé]rdida de datos|data loss)\b/i;
 const ACCESS_PATTERN =
