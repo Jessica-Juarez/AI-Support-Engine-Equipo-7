@@ -1,13 +1,12 @@
 
-const PYTHON_SERVICE_URL =
-  process.env.PYTHON_SERVICE_URL ||
-  "http://127.0.0.1:8000/predict";
-
 export async function classifyPython(message) {
+  const pythonServiceUrl =
+    process.env.PYTHON_SERVICE_URL ||
+    "http://127.0.0.1:8000/predict";
   let response;
 
   try {
-    response = await fetch(PYTHON_SERVICE_URL, {
+    response = await fetch(pythonServiceUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

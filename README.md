@@ -45,7 +45,7 @@ No puedo iniciar sesión,ACCESS
 La aplicación muestra un error,BUG
 ```
 
-Estos ejemplos solo muestran el formato: no bastan para entrenar. Usa datos etiquetados representativos de cada categoría, con al menos dos tickets por categoría y suficientes ejemplos para que las particiones de entrenamiento y prueba incluyan todas las categorías. El script divide los datos de forma estratificada, imprime un informe de clasificación y predice la categoría de un mensaje de ejemplo. No guarda el modelo ni modifica los motores de la API.
+Estos ejemplos solo muestran el formato: no bastan para entrenar. Usa datos etiquetados representativos de cada categoría, con al menos dos tickets por categoría y suficientes ejemplos para que las particiones de entrenamiento y prueba incluyan todas las categorías. El script divide los datos de forma estratificada, guarda el modelo en `models/ticket_classifier.joblib`, imprime un informe de clasificación y predice la categoría de un mensaje de ejemplo. No modifica los motores tradicional ni generativo.
 
 Para ejecutar las pruebas del script:
 
@@ -65,6 +65,12 @@ AI_MODEL=gpt-4o-mini
 
 No agregues `.env` al repositorio. La clave solo se envía en el encabezado de autorización al proveedor; no se registra ni se devuelve al cliente. El proveedor debe admitir `chat/completions` y `response_format: {"type":"json_object"}`.
 
+Para usar un modelo local ya descargado, consulta `ollama list` y selecciona su nombre antes de iniciar el servidor o ejecutar el benchmark. Por ejemplo, en PowerShell:
+
+```powershell
+$env:AI_MODEL = "qwen2.5:3b"
+```
+
 ## Contrato de la API
 
 `POST /api/analyze`, con `Content-Type: application/json`:
@@ -78,7 +84,13 @@ No agregues `.env` al repositorio. La clave solo se envía en el encabezado de a
 
 `mode` debe ser `traditional` o `generative`. Ambos responden con `category` (`ACCESS`, `BUG`, `FEATURE`, `SECURITY`), `priority` (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`), `response`, `requiresHumanReview` y `mode`. El texto debe tener entre 1 y 5000 caracteres. Solicitudes inválidas reciben HTTP 400; errores o respuestas inválidas del proveedor reciben errores HTTP 502/504 sin exponer información interna del proveedor.
 
-El clasificador generativo trata el mensaje como entrada no confiable. Además, una señal explícita de seguridad en el mensaje fuerza categoría `SECURITY`, prioridad al menos `HIGH` y revisión humana, independientemente de las instrucciones incluidas en el mensaje.
+También existe un modo opcional `python` para el clasificador de ML descrito abajo. Este devuelve solo `category` y `mode`; no sustituye los dos motores requeridos para la comparación.
+
+El clasificador generativo trata el mensaje como entrada no confiable. Además, las señales de seguridad reconocidas por las reglas fuerzan categoría `SECURITY`, prioridad al menos `HIGH` y revisión humana, independientemente de las instrucciones incluidas en el mensaje. Las reglas no reconocen todas las maneras posibles de describir un incidente, por lo que requieren supervisión humana.
+
+El motor también rechaza respuestas generativas que coincidan con patrones conocidos de solicitud de contraseñas, tokens u otros datos sensibles, o de afirmaciones de acciones no realizadas. Rechaza direcciones de correo y enlaces en las respuestas generadas para evitar datos de contacto inventados. Estos filtros no garantizan detectar todas las formulaciones posibles.
+
+Si el contenido generado no cumple el formato o activa esos filtros, el motor solicita una nueva respuesta al proveedor una sola vez. Si el segundo intento también falla, devuelve un error; no sustituye la respuesta por texto escrito manualmente. Esto puede aumentar el tiempo de respuesta.
 
 ## Pruebas y evidencia comparativa
 
@@ -87,7 +99,7 @@ npm test
 npm run benchmark
 ```
 
-El benchmark compara ambos motores con los mismos 10 casos de referencia (incluye ambigüedad e intentos de inyección de instrucciones), verifica el contrato y considera correcta una clasificación solo si coinciden categoría y prioridad. Muestra los resultados y genera `evidence/benchmark-results.md` con la tabla, porcentajes y una conclusión breve. El benchmark llama al proveedor configurado de verdad y falla explícitamente si no está disponible; no sustituye sus respuestas por resultados escritos manualmente. Define primero la referencia en [tests/cases.js](./tests/cases.js) si cambias la muestra.
+El benchmark compara ambos motores con los mismos 10 casos de referencia (incluye ambigüedad e intentos de inyección de instrucciones), verifica el contrato y considera correcta una clasificación solo si coinciden categoría y prioridad. Las respuestas fallidas o rechazadas cuentan como incorrectas en el porcentaje sobre los 10 casos. Muestra los resultados y genera `evidence/benchmark-results.md` con la tabla, porcentajes y una conclusión breve. El benchmark llama al proveedor configurado de verdad y termina con error si alguna respuesta falla o es rechazada; no sustituye sus respuestas por resultados escritos manualmente. Define primero la referencia en [tests/cases.js](./tests/cases.js) si cambias la muestra.
 
 
 

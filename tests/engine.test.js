@@ -39,6 +39,19 @@ test("traditional engine escalates security and prompt-injection cases for human
   }
 });
 
+test("traditional engine escalates reported unauthorized account activity", () => {
+  for (const message of [
+    "Alguien entró a mi cuenta sin autorización",
+    "Alguien cambió mi contraseña sin mi permiso",
+    "Creo que me hackearon la cuenta",
+  ]) {
+    const result = classifyTraditional(message);
+    assert.equal(result.category, "SECURITY", message);
+    assert.equal(result.priority, "HIGH", message);
+    assert.equal(result.requiresHumanReview, true, message);
+  }
+});
+
 test("traditional engine recognizes a plain inability to enter as an access issue", () => {
   const result = classifyTraditional("No puedo entrar");
   assert.equal(result.category, "ACCESS");
